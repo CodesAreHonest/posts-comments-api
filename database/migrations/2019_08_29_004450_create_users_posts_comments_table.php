@@ -34,7 +34,7 @@ class CreateUsersPostsCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('users posts_comments', function (Blueprint $table) {
+        Schema::table('users_posts_comments', function (Blueprint $table) {
             $table->dropForeign(['users_posts_id']);
             $table->dropColumn('users_posts_id');
 

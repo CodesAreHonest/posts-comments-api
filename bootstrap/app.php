@@ -21,9 +21,11 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
+
+$app->configure('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -72,9 +74,9 @@ if (app()->environment() !== 'production') {
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +90,9 @@ if (app()->environment() !== 'production') {
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Nomadnt\LumenPassport\PassportServiceProvider::class);
+
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
@@ -104,7 +108,7 @@ if (app()->environment() !== 'production') {
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-], function ($router) {
+], function () {
     require __DIR__.'/../routes/web.php';
 });
 
