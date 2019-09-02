@@ -13,7 +13,8 @@ class UserController extends Controller
     public function postCreateUser(Request $request) {
 
         $rules = [
-            'email' => 'required|email|unique:users,email',
+            'username'  => 'required|string|max:100',
+            'email'     => 'required|email|unique:users,email',
             'password'  => 'required|min:8|confirmed'
         ];
 
