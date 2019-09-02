@@ -76,6 +76,7 @@ if (app()->environment() !== 'production') {
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'throttle' => Nomadnt\LumenPassport\Middleware\ThrottleRequests::class
 ]);
 
 /*
@@ -108,7 +109,7 @@ $app->register(Nomadnt\LumenPassport\PassportServiceProvider::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-], function () {
+], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
 

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+use App\Exceptions\UnprocessableEntityException;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -45,6 +47,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof UnprocessableEntityException)  {
+            return $exception->render();
+        }
+
         return parent::render($request, $exception);
     }
 }
