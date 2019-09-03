@@ -2,14 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\UnprocessableEntityException;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
-use App\Exceptions\UnprocessableEntityException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +48,14 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof UnprocessableEntityException)  {
+            return $exception->render();
+        }
+
+        if ($exception instanceof InternalServerErrorException)  {
+            return $exception->render();
+        }
+
+        if ($exception instanceof BadGatewayException)  {
             return $exception->render();
         }
 
