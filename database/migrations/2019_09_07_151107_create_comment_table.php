@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersLikePostsTable extends Migration
+class CreateCommentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,20 @@ class CreateUsersLikePostsTable extends Migration
     public function up()
     {
         Schema::enableForeignKeyConstraints();
-        Schema::create('users_like_posts', function (Blueprint $table) {
+        Schema::create('comment', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('users_posts_id');
+            $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
+            $table->text('content');
+            $table->json('images');
+            $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('users_posts_id')->references('id')->on('users_posts');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('post_id')->references('id')
+                ->on('post');
+
+            $table->foreign('user_id')->references('id')
+                ->on('user');
         });
     }
 
@@ -32,14 +38,13 @@ class CreateUsersLikePostsTable extends Migration
      */
     public function down()
     {
-        Schema::table('users_like_posts', function (Blueprint $table) {
-            $table->dropForeign(['users_posts_id']);
-            $table->dropColumn('users_posts_id');
+        Schema::table('post', function (Blueprint $table) {
+            $table->dropForeign(['post_id']);
+            $table->dropColumn('post_id');
 
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
-
-        Schema::dropIfExists('users_like_posts');
+        Schema::dropIfExists('comment');
     }
 }
