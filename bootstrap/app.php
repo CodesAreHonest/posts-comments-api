@@ -77,7 +77,8 @@ if (app()->environment() !== 'production') {
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
-    'throttle' => Nomadnt\LumenPassport\Middleware\ThrottleRequests::class
+    'throttle' => Nomadnt\LumenPassport\Middleware\ThrottleRequests::class,
+    'passport' => App\Http\Middleware\PassportAuthentication::class
 ]);
 
 /*

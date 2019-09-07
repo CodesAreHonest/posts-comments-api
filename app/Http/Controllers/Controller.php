@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UnprocessableEntityException;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
 

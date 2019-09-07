@@ -5,12 +5,12 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InternalServerErrorException extends Exception
+class UnauthenticatedException extends Exception
 {
     private $error;
     private $debug;
     private $errorCode;
-    private $statusCode = 500;
+    private $statusCode = 401;
 
     public function __construct($error = null, $errorCode = null, $debug = null)  {
         $this->error = $error;
@@ -22,7 +22,7 @@ class InternalServerErrorException extends Exception
 
         $returnParams = [
             'status'    => $this->statusCode,
-            'message'   => 'Internal Server Error',
+            'message'   => 'Unauthenticated',
         ];
 
         if ($this->error) {

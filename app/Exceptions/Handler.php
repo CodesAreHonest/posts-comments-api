@@ -47,19 +47,28 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // 422
         if ($exception instanceof UnprocessableEntityException)  {
             return $exception->render();
         }
 
+        // 500
         if ($exception instanceof InternalServerErrorException)  {
             return $exception->render();
         }
 
+        // 502
         if ($exception instanceof BadGatewayException)  {
             return $exception->render();
         }
 
+        // 403
         if ($exception instanceof ForbiddenException)  {
+            return $exception->render();
+        }
+
+        // 401
+        if ($exception instanceof UnauthenticatedException)  {
             return $exception->render();
         }
 

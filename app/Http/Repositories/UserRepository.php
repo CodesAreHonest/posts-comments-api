@@ -43,7 +43,6 @@ class UserRepository
 
         $existUser = $this->user->where('email', $email)
             ->firstOrFail();
-
         if (!$existUser) {
             throw new ForbiddenException('The given email address is invalid. ', 'InvalidEmailAddress');
         }

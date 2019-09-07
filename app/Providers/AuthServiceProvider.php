@@ -31,6 +31,12 @@ class AuthServiceProvider extends ServiceProvider
         // change the default token expiration
         Passport::tokensExpireIn(Carbon::now()->addMinutes(15));
 
+        // oauth service scopes
+        Passport::tokensCan([
+            'users' => 'Authenticated user. ',
+            'admins' => 'Authenticated administrator. ',
+        ]);
+
         // change the default refresh token expiration
         Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(30));
     }
