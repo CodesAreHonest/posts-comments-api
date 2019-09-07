@@ -22,10 +22,10 @@ class CreateUserLikePostTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')
-                ->on('user');
+                ->on('users');
 
             $table->foreign('post_id')->references('id')
-                ->on('post');
+                ->on('posts');
         });
     }
 

@@ -14,7 +14,7 @@ class CreateCommentTable extends Migration
     public function up()
     {
         Schema::enableForeignKeyConstraints();
-        Schema::create('comment', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
@@ -24,10 +24,10 @@ class CreateCommentTable extends Migration
             $table->timestamps();
 
             $table->foreign('post_id')->references('id')
-                ->on('post');
+                ->on('posts');
 
             $table->foreign('user_id')->references('id')
-                ->on('user');
+                ->on('users');
         });
     }
 
@@ -38,13 +38,13 @@ class CreateCommentTable extends Migration
      */
     public function down()
     {
-        Schema::table('post', function (Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
             $table->dropForeign(['post_id']);
             $table->dropColumn('post_id');
 
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
-        Schema::dropIfExists('comment');
+        Schema::dropIfExists('comments');
     }
 }

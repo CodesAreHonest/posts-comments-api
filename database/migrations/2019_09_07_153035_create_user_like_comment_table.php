@@ -22,10 +22,10 @@ class CreateUserLikeCommentTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')
-                ->on('user');
+                ->on('users');
 
             $table->foreign('comment_id')->references('id')
-                ->on('comment');
+                ->on('comments');
         });
     }
 

@@ -11,8 +11,7 @@ class Controller extends BaseController
 {
     protected function validator ($request, $rules) {
 
-        $validator = Validator::make($request, $rules);
-
+        $validator = Validator::make($request, $rules, config('validation'));
 
         if ($validator->fails()) {
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\BadGatewayException;
+use App\Exceptions\ForbiddenException;
 use App\Exceptions\InternalServerErrorException;
 use App\Exceptions\UnprocessableEntityException;
 use App\Http\Services\UserService;
@@ -30,7 +31,7 @@ class UserController extends Controller
 
         $this->validator($request->all(), $rules);
 
-        $response = $this->userService->createUserAccount($request);
+        $response = $this->userService->register($request);
 
         switch ($response['status']) {
             case 200:
@@ -39,7 +40,33 @@ class UserController extends Controller
                 throw new BadGatewayException();
 
         }
+    }
 
+    /**
+     * @throws UnprocessableEntityException
+     * @throws ForbiddenException
+     * @throws BadGatewayException
+     */
+    public function postLogin (Request $request) {
 
+        $rules = [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'email' => 'required|email',
+            'password'  => 'required|string',
+            'scope'     => 'nullable|string'
+        ];
+
+        $this->validator($request->all(), $rules);
+
+        $response = $this->userService->login($request);
+
+        switch ($response['status']) {
+            case 200:
+                return response()->json($response, 200);
+            default:
+                throw new BadGatewayException();
+
+        }
     }
 }

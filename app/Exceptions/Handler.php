@@ -59,6 +59,10 @@ class Handler extends ExceptionHandler
             return $exception->render();
         }
 
+        if ($exception instanceof ForbiddenException)  {
+            return $exception->render();
+        }
+
         return parent::render($request, $exception);
     }
 }

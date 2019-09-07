@@ -9,11 +9,13 @@ class InternalServerErrorException extends Exception
 {
     private $error;
     private $debug;
+    private $errorCode;
     private $statusCode = 500;
 
-    public function __construct($error, $debug = null)  {
+    public function __construct($error = null, $errorCode = null, $debug = null)  {
         $this->error = $error;
         $this->debug = $debug;
+        $this->errorCode = $errorCode;
     }
 
     public function render() {
@@ -23,6 +25,14 @@ class InternalServerErrorException extends Exception
             'message'   => 'Internal Server Error',
             'error'     => $this->error
         ];
+
+        if ($this->error) {
+            $returnParams['error'] = $this->error;
+        }
+
+        if ($this->errorCode) {
+            $returnParams['code'] = $this->errorCode;
+        }
 
         if ($this->debug) {
             $returnParams['debug'] = $this->debug;

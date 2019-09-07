@@ -5,13 +5,12 @@ namespace App\Exceptions;
 
 use Exception;
 
-class UnprocessableEntityException extends Exception
+class ForbiddenException extends Exception
 {
-
     private $error;
     private $debug;
     private $errorCode;
-    private $statusCode = 422;
+    private $statusCode = 403;
 
     public function __construct($error = null, $errorCode = null, $debug = null)  {
         $this->error = $error;
@@ -23,8 +22,7 @@ class UnprocessableEntityException extends Exception
 
         $returnParams = [
             'status'    => $this->statusCode,
-            'message'   => 'Unprocessable Entity',
-            'error'     => $this->error
+            'message'   => 'Access Denied'
         ];
 
         if ($this->error) {

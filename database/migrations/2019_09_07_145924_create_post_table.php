@@ -14,7 +14,7 @@ class CreatePostTable extends Migration
     public function up()
     {
         Schema::enableForeignKeyConstraints();
-        Schema::create('post', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->text('content');
@@ -22,7 +22,7 @@ class CreatePostTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('user');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -33,10 +33,10 @@ class CreatePostTable extends Migration
      */
     public function down()
     {
-        Schema::table('post', function (Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
            $table->dropForeign(['user_id']);
            $table->dropColumn('user_id');
         });
-        Schema::dropIfExists('post');
+        Schema::dropIfExists('posts');
     }
 }
