@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
         // change the default token expiration
-        Passport::tokensExpireIn(Carbon::now()->addMinutes(15));
+        Passport::tokensExpireIn(Carbon::now()->addMinutes(60));
 
         // oauth service scopes
         Passport::tokensCan([
@@ -38,6 +38,6 @@ class AuthServiceProvider extends ServiceProvider
         ]);
 
         // change the default refresh token expiration
-        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(30));
+        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(75));
     }
 }

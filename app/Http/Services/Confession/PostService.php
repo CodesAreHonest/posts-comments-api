@@ -4,11 +4,15 @@
 namespace App\Http\Services\Confession;
 
 
+use App\Http\Services\Storage\FileService;
 use Illuminate\Http\Request;
 
 class PostService
 {
-    public function __construct(){}
+    private $fileService;
+    public function __construct(FileService $fileService){
+        $this->fileService = $fileService;
+    }
 
     /**
      * @param Request $request
@@ -17,10 +21,16 @@ class PostService
 
         $stripContent = strip_tags($request['content']);
         $trimContent = trim($stripContent);
-        $firstImage  = $request->file('first-image');
-        $secondImage = $request->file('second-image');
-        $thirdImage  = $request->file('third-image');
 
-        var_dump ($firstImage); exit();
+        if ($request->has('first-image')) {
+            $diskName = 'public';
+            $firstImage  = $request->file('first-image');
+            $firstImageUrl = $this->fileService->storeFile($diskName, $firstImage);
+        }
+
+//        $firstImage  = $request->file('first-image');
+//
+//        $secondImage = $request->file('second-image');
+//        $thirdImage  = $request->file('third-image');
     }
 }

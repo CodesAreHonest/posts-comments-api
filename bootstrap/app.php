@@ -27,6 +27,7 @@ $app->withEloquent();
 
 $app->configure('auth');
 $app->configure('validation');
+$app->configure('filesystems');
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,13 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    function ($app) {
+        return new Illuminate\Filesystem\FilesystemManager($app);
+    }
+);
+
 /*
 |--------------------------------------------------------------------------
 | Register Flipbox Lumen Generator
@@ -58,6 +66,12 @@ if (app()->environment() !== 'production') {
     $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 }
 
+/*
+|--------------------------------------------------------------------------
+| Register FileSystem
+|--------------------------------------------------------------------------
+*/
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 
 /*
