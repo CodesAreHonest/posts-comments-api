@@ -6,6 +6,7 @@ namespace App\Http\Services\Confession;
 
 use App\Exceptions\InternalServerErrorException;
 use App\Http\Repositories\PostRepository;
+use App\Http\Repositories\UserLikePostsRepository;
 use App\Http\Services\BaseService;
 use App\Http\Services\Storage\FileService;
 use Illuminate\Http\Request;
@@ -15,10 +16,15 @@ class PostService extends BaseService
     private $fileService;
     private $diskName = 'posts';
     private $postRepository;
+    private $userLikePostRepository;
 
-    public function __construct(PostRepository $postRepository, FileService $fileService){
+    public function __construct(PostRepository $postRepository,
+                                FileService $fileService,
+                                UserLikePostsRepository $userLikePostRepository
+    ){
         $this->fileService = $fileService;
         $this->postRepository = $postRepository;
+        $this->userLikePostRepository = $userLikePostRepository;
     }
 
     /**
@@ -70,6 +76,23 @@ class PostService extends BaseService
         return [
             'status'    => 201,
             'message'   => 'Post created success',
+        ];
+    }
+
+    /**
+     * @params Request $request
+     * @throws InternalServerErrorException
+     */
+    public function userLikePost ($request) {
+
+        $postId = $request['post_id'];
+        $userId = $request['user_sub'];
+
+        $this->userLikePostRepository->likePost($postId, $userId);
+
+        return [
+            'status'    => 201,
+            'message'   => 'Liked submitted on the post successfully.'
         ];
     }
 }

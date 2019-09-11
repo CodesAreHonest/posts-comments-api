@@ -22,5 +22,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'confession', 'middleware' => 'passport'], function () use ($router) {
        $router->post('/posts', 'Confession\PostController@postCreatePost');
        $router->post('/comments', 'Confession\CommentController@postCreateComment');
+
+       $router->post('/like/posts', 'Confession\PostController@postUserLikePost');
     });
 });

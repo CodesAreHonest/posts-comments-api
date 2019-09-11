@@ -39,14 +39,13 @@ class UserRepository
      * @return Collection $existUser
      * @throws ForbiddenException
      */
-    public function authenticate(string $email, string $password) {
+    public function authenticate (string $email, string $password) {
 
         $existUser = $this->user->where('email', $email)
             ->firstOrFail();
         if (!$existUser) {
             throw new ForbiddenException('The given email address is invalid. ', 'InvalidEmailAddress');
         }
-
 
         $verifyPassword = Hash::check($password, $existUser['password']);
 

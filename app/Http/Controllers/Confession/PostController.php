@@ -42,4 +42,27 @@ class PostController extends Controller
                 throw new BadGatewayException();
         }
     }
+
+    /**
+     * @throws UnprocessableEntityException
+     * @throws BadGatewayException
+     * @throws InternalServerErrorException
+     */
+    public function postUserLikePost (Request $request) {
+
+        $rules = [
+            'post_id'   => 'required|exists:posts,id'
+        ];
+
+        $this->validator($request->all(), $rules);
+
+        $response = $this->postService->userLikePost($request);
+
+        switch ($response['status']) {
+            case 201:
+                return response()->json($response, 201);
+            default:
+                throw new BadGatewayException();
+        }
+    }
 }
