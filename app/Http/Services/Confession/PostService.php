@@ -6,10 +6,11 @@ namespace App\Http\Services\Confession;
 
 use App\Exceptions\InternalServerErrorException;
 use App\Http\Repositories\PostRepository;
+use App\Http\Services\BaseService;
 use App\Http\Services\Storage\FileService;
 use Illuminate\Http\Request;
 
-class PostService
+class PostService extends BaseService
 {
     private $fileService;
     private $diskName = 'posts';
@@ -27,8 +28,7 @@ class PostService
      */
     public function createPost ($request) {
 
-        $stripContent = strip_tags($request['content']);
-        $trimContent = trim($stripContent);
+        $processedContent = $this->processContent($request['content']);
 
         $imageArray = [];
 
@@ -61,7 +61,7 @@ class PostService
 
         $payload = [
             'user_id'   => $request['user_sub'],
-            'content'   => $trimContent,
+            'content'   => $processedContent,
             'images'    => json_encode($imageArray)
         ];
 
