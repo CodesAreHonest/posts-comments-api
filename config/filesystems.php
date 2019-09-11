@@ -64,6 +64,13 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'posts' => [
+            'driver' => 'local',
+            'root' => base_path('public/storage/posts'),
+            'url' => env('APP_URL').'/storage/posts',
+            'visibility' => 'public',
+        ],
+
     ],
 
 ];
