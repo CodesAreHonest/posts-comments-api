@@ -4,6 +4,8 @@
 namespace App\Http\Services\Confession;
 
 
+use App\Exceptions\InternalServerErrorException;
+use App\Http\Repositories\PostRepository;
 use App\Http\Services\Storage\FileService;
 use Illuminate\Http\Request;
 
@@ -11,13 +13,17 @@ class PostService
 {
     private $fileService;
     private $diskName = 'posts';
+    private $postRepository;
 
-    public function __construct(FileService $fileService){
+    public function __construct(PostRepository $postRepository, FileService $fileService){
         $this->fileService = $fileService;
+        $this->postRepository = $postRepository;
     }
 
     /**
      * @param Request $request
+     * @throws InternalServerErrorException
+     * @return array
      */
     public function createPost ($request) {
 
@@ -52,5 +58,18 @@ class PostService
                 $imageArray['third-image'] = $thirdImageUrl;
             }
         }
+
+        $payload = [
+            'user_id'   => $request['user_sub'],
+            'content'   => $trimContent,
+            'images'    => json_encode($imageArray)
+        ];
+
+        $this->postRepository->createPost($payload);
+
+        return [
+            'status'    => 201,
+            'message'   => 'Post created success',
+        ];
     }
 }

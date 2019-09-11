@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Confession;
 
+use App\Exceptions\BadGatewayException;
+use App\Exceptions\InternalServerErrorException;
 use App\Exceptions\UnprocessableEntityException;
 use App\Http\Services\Confession\PostService;
 use Illuminate\Http\Request;
@@ -17,6 +19,8 @@ class PostController extends Controller
 
     /**
      * @throws UnprocessableEntityException
+     * @throws BadGatewayException
+     * @throws InternalServerErrorException
      */
     public function postCreatePost (Request $request) {
 
@@ -29,8 +33,13 @@ class PostController extends Controller
 
         $this->validator($request->all(), $rules);
 
-        $this->postService->createPost($request);
+        $response = $this->postService->createPost($request);
 
-        return response()->json ($request['user_sub'], 201);
+        switch ($response['status']) {
+            case 201:
+                return response()->json($response, 201);
+            default:
+                throw new BadGatewayException();
+        }
     }
 }
