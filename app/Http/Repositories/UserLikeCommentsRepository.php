@@ -5,32 +5,31 @@ namespace App\Http\Repositories;
 
 
 use App\Exceptions\InternalServerErrorException;
-use App\Model\UserLikePosts;
+use App\Model\UserLikeComments;
 use Illuminate\Database\QueryException;
 
-class UserLikePostsRepository
+class UserLikeCommentsRepository
 {
-    private $userLikePosts;
+    private $userLikeComments;
 
-    public function __construct(UserLikePosts $userLikePosts) {
-        $this->userLikePosts = $userLikePosts;
+    public function __construct(UserLikeComments $userLikeComments) {
+        $this->userLikeComments = $userLikeComments;
     }
 
-
     /**
-     * @param  int $postId
+     * @param  int $commentId
      * @param  int $userId
      * @throws InternalServerErrorException
      */
-    public function likePost (int $postId, int $userId) {
+    public function likeComment (int $commentId, int $userId) {
 
         $params = [
-            'post_id'   => $postId,
-            'user_id'   => $userId
+            'comment_id'   => $commentId,
+            'user_id'       => $userId
         ];
 
         try {
-            $this->userLikePosts->create($params);
+            $this->userLikeComments->create($params);
         }
         catch (QueryException $e) {
             throw new InternalServerErrorException(

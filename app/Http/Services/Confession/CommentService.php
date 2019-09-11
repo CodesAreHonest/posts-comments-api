@@ -6,6 +6,7 @@ namespace App\Http\Services\Confession;
 
 use App\Exceptions\InternalServerErrorException;
 use App\Http\Repositories\CommentRepository;
+use App\Http\Repositories\UserLikeCommentsRepository;
 use App\Http\Services\BaseService;
 use App\Http\Services\Storage\FileService;
 use Illuminate\Http\Request;
@@ -15,10 +16,15 @@ class CommentService extends BaseService
     private $commentRepository;
     private $fileService;
     private $diskName = 'comments';
+    private $userLikeCommentRepository;
 
-    public function __construct(FileService $fileService, CommentRepository $commentRepository) {
+    public function __construct(FileService $fileService,
+                                CommentRepository $commentRepository,
+                                UserLikeCommentsRepository $userLikeCommentRepository
+    ) {
         $this->commentRepository = $commentRepository;
         $this->fileService = $fileService;
+        $this->userLikeCommentRepository = $userLikeCommentRepository;
     }
 
     /**
@@ -51,6 +57,24 @@ class CommentService extends BaseService
         return [
             'status'    => 201,
             'message'   => 'Comment created success. '
+        ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws InternalServerErrorException
+     */
+    public function userLikeComments ($request) {
+
+        $commentId = $request['comment_id'];
+        $userId = $request['user_sub'];
+
+        $this->userLikeCommentRepository->likeComment($commentId, $userId);
+
+        return [
+            'status'    => 201,
+            'message'   => 'Liked submitted on the comment successfully.'
         ];
     }
 
