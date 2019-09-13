@@ -50,9 +50,9 @@ class UserController extends Controller
     public function postLogin (Request $request) {
 
         $rules = [
-            'client_id' => 'required|string',
+            'client_id'     => 'required|string',
             'client_secret' => 'required|string',
-            'email' => 'required|email',
+            'email'         => 'required|email',
             'password'  => 'required|string',
             'scope'     => 'nullable|string'
         ];

@@ -25,5 +25,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
        $router->post('/like/posts', 'Confession\PostController@postUserLikePost');
        $router->post('/like/comments', 'Confession\CommentController@postUserLikeComment');
+
+       $router->get('/samples', 'Confession\PostController@getSample');
+       $router->get('/lists', 'Confession\PostController@getLists');
     });
 });
