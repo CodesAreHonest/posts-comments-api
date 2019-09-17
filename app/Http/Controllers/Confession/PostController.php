@@ -6,10 +6,12 @@ use App\Exceptions\BadGatewayException;
 use App\Exceptions\InternalServerErrorException;
 use App\Exceptions\UnprocessableEntityException;
 use App\Http\Services\Confession\PostService;
+use App\Model\Comment;
 use App\Model\Post;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -68,70 +70,59 @@ class PostController extends Controller
         }
     }
 
-    public function getSample (Request $request) {
-        $content = "{
-  \"status\": 200,
-  \"message\": \"success\",
-  \"posts\": [
-    {
-      \"username\": \"yinghua\",
-      \"created_at\": \"2019-09-21 12:00:00\",
-      \"content\": \"Today is awesome\",
-      \"image\": {
-        \"first-image\": \"xxx.jpg\",
-        \"second-image\": \"xxx.jpg\",
-        \"third-image\": \"xxx.jpg\"
-      },
-      \"like\": {
-        \"count\": 2,
-        \"user\": [
-          {
-            \"username\": \"YinghuaChai\",
-            \"firstName\": \"Chai\",
-            \"lastName\": \"Yinghua\",
-            \"created_at\": \"2019-09-21 12:00:00\"
-          }
-        ]
-      },
-      \"comment\": [
-        {
-          \"username\": \"yinghua\",
-          \"created_at\": \"2019-09-21 12:00:00\",
-          \"content\": \"Today is awesome too\",
-          \"image\": {
-            \"first-image\": \"xxx.jpg\"
-          },
-          \"like\": {
-            \"count\": 2,
-            \"user\": [
-              {
-                \"username\": \"YinghuaChai\",
-                \"firstName\": \"Chai\",
-                \"lastName\": \"Yinghua\",
-                \"created_at\": \"2019-09-21 12:00:00\"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  ]
-}";
-        return response()->json (json_decode($content), 200);
-    }
-
     public function getLists (Request $request) {
 
-        $post = Post::with('comments')->with('likeComments')->get();
+        $post = Post::with([
+            'likes' => function ($q) {
+                $q->join('users', 'user_like_post.user_id', '=', 'users.id')
+                    ->select([
+                        DB::raw('user_like_post.post_id post_id'),
+                        DB::raw('users.email email'),
+                        DB::raw('users.username username'),
+                        DB::raw('user_like_post.created_at created_at'),
+                        DB::raw('user_like_post.updated_at updated_at'),
+                    ])
+                    ->orderBy('user_like_post.created_at', 'asc');
+            }
+        ])->latest()->get();
 
-        $user = User::with('posts')->with('comments')
-            ->with('likeComments')->with('likePosts')
-            ->get();
+        $comments = new Comment();
 
-        $onePost = Post::find(2);
+        $columns = [
+            DB::raw('comments.id id'),
+            DB::raw('comments.user_id user_id'),
+            DB::raw('users.email email'),
+            DB::raw('users.username username'),
+            DB::raw('comments.content content'),
+            DB::raw('comments.images images'),
+            DB::raw('comments.created_at created_at'),
+            DB::raw('comments.updated_at updated_at'),
+        ];
 
-        return response()->json($post, 200);
+        foreach ($post as $key => $value) {
+            $post[$key]['comments'] = $comments->join('users', 'users.id', '=', 'comments.user_id')
+                ->select($columns)
+                ->where('post_id', $value['id'])->with([
+                    'likes' => function ($q) {
+                        $q->join('users', 'user_like_comment.user_id', '=', 'users.id')
+                            ->select([
+                                DB::raw('user_like_comment.comment_id comment_id'),
+                                DB::raw('users.email email'),
+                                DB::raw('users.username username'),
+                                DB::raw('user_like_comment.created_at created_at'),
+                                DB::raw('user_like_comment.updated_at updated_at'),
+                            ])
+                            ->orderBy('user_like_comment.created_at', 'asc');
+                    }
+                ])->get();
+        }
 
+        $returnParams = [
+            'status'  => 200,
+            'message'   => 'success',
+            'data'  => $post
+        ];
 
+        return response()->json($returnParams, 200);
     }
 }

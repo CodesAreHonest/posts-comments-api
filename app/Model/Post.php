@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -12,18 +13,19 @@ class Post extends Model
         'user_id', 'content', 'images'
     ];
 
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
     public function comments() {
         return $this->hasMany('App\Model\Comment');
     }
 
-    public function likePosts() {
+    public function likes() {
         return $this->hasMany('App\Model\UserLikePosts');
     }
 
-    public function likeComments() {
-        return $this->hasManyThrough(
-            'App\Model\UserLikeComments', 'App\Model\Comment',
-            'post_id', 'comment_id','id', 'id'
-        );
+    public function users() {
+        return $this->belongsTo('App\User', 'user_id');
     }
 }

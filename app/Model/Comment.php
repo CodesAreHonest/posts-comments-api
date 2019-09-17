@@ -12,7 +12,15 @@ class Comment extends Model
         'post_id', 'user_id', 'content', 'images'
     ];
 
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
     public function post() {
         return $this->belongsTo('App\Model\Post', 'post_id');
+    }
+
+    public function likes() {
+        return $this->hasMany('App\Model\UserLikeComments');
     }
 }
